@@ -1,2 +1,6 @@
 # Progra1-lenguajes
-progra racket lenguajes de programacion
+Tarea Programada del curso lenguajes de programación.
+Lenguaje: Racket
+Estudiantes:
+    Carlos Mora
+    Rubén Villata
