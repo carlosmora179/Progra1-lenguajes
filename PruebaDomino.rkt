@@ -48,6 +48,19 @@
 ;Definimos los 6 6
 (define f66 (ficha 6 6 #f #f #t))
 
-;Definimos el tablero
+;Definimos el tablero ya ordenado por la suma de fichas de mayor valor a menor valor
 (define t (tablero (list f66 f56 f46 f55 f36 f45 f26 f35 f44 f16 f25 f34 f06 f15 f24 f33 f05 f14 f23 f04 f13 f22 f03 f12 f02 f11 f01 f00)))
+
+;Funciones
+
+;Funcion eliminacion de una ficha en especifico.
+(define (eliminar_ficha table nombre_ficha)
+  (cond
+    [(empty? tablero-fichas) empty]
+    [else eliminar_ficha_aux(table nombre_ficha)])
+  )
+(define (eliminar_ficha_aux table nombre_ficha)
+  (cond
+    [(empty? tablero-fichas) empty]
+    [else (remove nombre_ficha tablero-fichas)]))
 
