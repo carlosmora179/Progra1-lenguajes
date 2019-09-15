@@ -57,7 +57,7 @@
 (define (eliminar_ficha table nombre_ficha)
   (cond
     [(empty? tablero-fichas) empty]
-    [else eliminar_ficha_aux(table nombre_ficha)])
+    [else (remove nombre_ficha table)])
   )
 (define (eliminar_ficha_aux table nombre_ficha)
   (cond
