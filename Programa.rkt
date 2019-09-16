@@ -60,7 +60,7 @@
      (list_some_nodes_aux (first (find_node arbol1 nodoinicio)) 0 );llamda a la funcion auxiliar de imprimir todo el arbol
      "error estructura de entrada no valida");mensaje de error en caso de no ser un arbol
   )
-
+;funcion auxiliar para listar algunos nodos
 (define (list_some_nodes_aux nodoinicio etapa )
   ;si esta vacio el nodo que llega
   (if(= etapa 0) (if (empty? nodoinicio)
@@ -133,32 +133,35 @@
 
 
 
-
+;funcion para eliminar un nodo
+;entradas: el arbol y el nodo a eliminar
+;salidas: el arbol con el nodo y su rama eliminado
 (define (delete_node arbolito nodoeliminar)
 ;verificacion de valores de entrada
   (if(and (arbol? arbolito) (nodo? nodoeliminar))
-     (if(= 0 (second(delete_node_aux(arbol-raiz arbolito) nodoeliminar (arbol-raiz arbolito) 0 ))) 
+     ;condicion para eliminar el hijo o el hermano del ancestro
+     (if(= 0 (second(delete_node_aux(arbol-raiz arbolito) nodoeliminar (arbol-raiz arbolito) 0 )))
+        ;si la segunda posicion de la lista es 0 es porque es un hijo
         (set-nodo-hijo! (first(delete_node_aux(arbol-raiz arbolito) nodoeliminar (arbol-raiz arbolito) 0 )) empty)
+        ;si no es 0 es por que es un hermano
         (set-nodo-hermano! (first(delete_node_aux(arbol-raiz arbolito) nodoeliminar (arbol-raiz arbolito) 0 )) empty))
   
      "valores de entrada incorectos")
 
   )
-
+;funcion auxiliar para eliminar nodo
+;entradas la raiz, el nodod a eliminar, el ultimo en el que se estuvo y el estatus 0 si es hijo o 1 si es hermano
 (define (delete_node_aux raiz nodoeliminar ultimovisitado estatus)
   (cond [(empty? raiz);si esta vacio
       empty ];devuelvo esto al estar vacio
   
-  [ (equal? raiz nodoeliminar) (list ultimovisitado estatus )];verifica que sea el nodo buscado y devuelve el ultimo padre
+  [ (equal? raiz nodoeliminar) (list ultimovisitado estatus )];verifica que sea el nodo buscado y devuelve el ultimo visitado + el estatus
       ;si no esta vacio hago todo esto
-      [(append(delete_node_aux (nodo-hijo raiz) nodoeliminar raiz 0 );aca llamo con el hijo y cambio al ultimo padre por el actual
-              (delete_node_aux (nodo-hermano raiz) nodoeliminar raiz 1 ) )]);aca con el hermano ys e mantiene el ultimo padre
+      [(append(delete_node_aux (nodo-hijo raiz) nodoeliminar raiz 0 );aca llamo con el hijo y cambio al ultimo visitado por el actual y el estatus por 0
+              (delete_node_aux (nodo-hermano raiz) nodoeliminar raiz 1 ) )]);aca con el hermano cambio al ultimo visitado por el actual y el estatus por 1
 
 
   )
-
-
-
 
 
 
