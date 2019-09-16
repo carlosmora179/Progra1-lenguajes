@@ -60,3 +60,10 @@
     [else (set-tablero-fichas! t (remove f00 (tablero-fichas t)))]) 
   ) 
 
+(define (repartir_fichas lista)
+  (cond
+    [(empty? lista) cons ""]
+    [else  (string-append "["
+                          (string-append (number->string (ficha-valor1 (first lista))))
+                                                            (string-append ","
+                                                                           (string-append (number->string (ficha-valor2 (first lista))) "]\n")))(repartir_fichas (cdr lista))]))
