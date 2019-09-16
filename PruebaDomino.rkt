@@ -51,3 +51,12 @@
 ;Definimos el tablero 
 (define t (tablero (list f66 f56 f46 f55 f36 f45 f26 f35 f44 f16 f25 f34 f06 f15 f24 f33 f05 f14 f23 f04 f13 f22 f03 f12 f02 f11 f01 f00))) 
  
+;Funciones 
+ 
+;Funcion eliminacion de una ficha en especifico. 
+(define (eliminar_ficha nombre_ficha) 
+  (cond 
+    [(empty? (tablero-fichas t)) cons '()] 
+    [else (set-tablero-fichas! t (remove f00 (tablero-fichas t)))]) 
+  ) 
+
