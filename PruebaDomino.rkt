@@ -1,7 +1,7 @@
 #lang racket
 
 ;Creamos las estructuras de los componentes que se nesesitan para poder jugar domino.
-(struct ficha(valor1 valor2 usado1 usado2 promesing)#:transparent #:mutable)
+(struct ficha(valor1 valor2 conectado1 conectado2 promesing)#:transparent #:mutable)
 (struct tablero(fichas)#:transparent #:mutable)
 
 ;Definimos las fichas 
@@ -56,7 +56,7 @@
 ;Funcion eliminacion de una ficha en especifico. 
 (define (eliminar_ficha nombre_ficha) 
   (cond 
-    [(empty? (tablero-fichas t)) cons '()] 
+    [(empty? (tablero-fichas t)) cons (tablero-fichas t) '()] 
     [else (set-tablero-fichas! t (remove f00 (tablero-fichas t)))]) 
   ) 
 
@@ -67,3 +67,15 @@
                           (string-append (number->string (ficha-valor1 (first lista))))
                                                             (string-append ","
                                                                            (string-append (number->string (ficha-valor2 (first lista))) "]\n")))(repartir_fichas (cdr lista))]))
+
+(define (resolver_domino tablero)
+  (cond
+    [(empty? (tablero-fichas t)) cons '()]
+    [else (resolver_domino_aux (tablero-fichas t) '() 0 )]))
+
+(define (resolver_domino_aux lvieja lnueva indice)
+  (cond
+    [(empty? lvieja) lnueva]
+    [(empty? lnueva) (set! lnueva (list (list-ref lvieja 0))) (remove (list-ref lvieja 0) lvieja)]
+    [(eqv? (ficha-conectado1 (last lnueva) ) #f)(cond
+                                           [(= (ficha-valor1 (last lnueva)) ((ficha-valor1 (list-ref lvieja 0))))(set! (ficha-conectado1 (last lvieja)) #true)])]))
