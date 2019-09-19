@@ -68,14 +68,54 @@
                                                             (string-append ","
                                                                            (string-append (number->string (ficha-valor2 (first lista))) "]\n")))(repartir_fichas (cdr lista))]))
 
-(define (resolver_domino tablero)
+(define (resolver_domino table)
   (cond
-    [(empty? (tablero-fichas t)) cons '()]
-    [else (resolver_domino_aux (tablero-fichas t) '() 0 )]))
+    [(empty? (tablero-fichas table)) cons '()]
+    [else (resolver_domino_aux (tablero-fichas table) '() 0 )]))
 
 (define (resolver_domino_aux lvieja lnueva indice)
   (cond
     [(empty? lvieja) lnueva]
+    [(< (length lvieja) indice) (verificador lvieja lnueva indice)]
     [(empty? lnueva) (set! lnueva (list (list-ref lvieja 0))) (remove (list-ref lvieja 0) lvieja)]
     [(eqv? (ficha-conectado1 (last lnueva) ) #f)(cond
-                                           [(= (ficha-valor1 (last lnueva)) ((ficha-valor1 (list-ref lvieja 0))))(set! (ficha-conectado1 (last lvieja)) #true)])]))
+                                           [(= (ficha-valor1 (last lnueva)) ((ficha-valor1 (list-ref lvieja indice))))
+                                            (set-ficha-conectado1! (list-ref lvieja indice) (#t))
+                                            (set-ficha-conectado1! (last lnueva) (#t))
+                                            (set! lnueva (append lnueva (list-ref lvieja indice)))
+                                            (remove (list-ref lvieja indice) lvieja)
+                                            (resolver_domino_aux lvieja lnueva 0)]
+                                           [(= (ficha-valor1 (last lnueva)) ((ficha-valor2 (list-ref lvieja indice))))
+                                            (set-ficha-conectado2! (list-ref lvieja indice) (#t))
+                                            (set-ficha-conectado1! (last lnueva) (#t))
+                                            (set! lnueva (append lnueva (list-ref lvieja indice)))
+                                            (remove (list-ref lvieja indice) lvieja)
+                                            (resolver_domino_aux lvieja lnueva 0)]
+                                           [else (resolver_domino_aux lvieja lnueva (+ indice 1))])]
+    [(eqv? (ficha-conectado2 (last lnueva) ) #f)(cond
+                                           [(= (ficha-valor2 (last lnueva)) ((ficha-valor1 (list-ref lvieja indice))))
+                                            (set-ficha-conectado1! (list-ref lvieja indice) (#t))
+                                            (set-ficha-conectado2! (last lnueva) (#t))
+                                            (set! lnueva (append lnueva (list-ref lvieja indice)))
+                                            (remove (list-ref lvieja indice) lvieja)
+                                            (resolver_domino_aux lvieja lnueva 0)]
+                                           [(= (ficha-valor2 (last lnueva)) ((ficha-valor2 (list-ref lvieja indice))))
+                                            (set-ficha-conectado2! (list-ref lvieja indice) (#t))
+                                            (set-ficha-conectado2! (last lnueva) (#t))
+                                            (set! lnueva (append lnueva (list-ref lvieja indice)))
+                                            (remove (list-ref lvieja indice) lvieja)
+                                            (resolver_domino_aux lvieja lnueva 0)]
+                                           [else (resolver_domino_aux lvieja lnueva (+ indice 1))])]))
+    
+
+
+(define (verificador lvieja lnueva indice)
+  (cond
+    [(eqv? (ficha-promesing) (last lnueva) #t)
+     (set-ficha-promesing! (last lnueva) (#f))
+     (set-ficha-conectado1! (last lnueva) (#f))
+     (set-ficha-conectado2! (last lnueva) (#f))
+     (set! lvieja (append lvieja (last lnueva)))
+     (remove (last lnueva) lnueva)
+     (resolver_domino_aux lvieja lnueva 0)]
+    [else lnueva]))
